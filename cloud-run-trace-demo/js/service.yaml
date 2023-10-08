@@ -4,6 +4,7 @@ metadata:
   name: opentelemetry-cloud-run-test-kk
   annotations:
     run.googleapis.com/launch-stage: BETA
+    run.googleapis.com/ingress: all
 spec:
   template:
     metadata:
@@ -16,8 +17,8 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-          value: "http://localhost:4317"
+        - name: "TEST_SERVICE"
+          value: "opentelemetry-cloud-run-test-kk"
       - image: asia-northeast1-docker.pkg.dev/nova-we/init/otel-collector-metrics
         name: collector
         startupProbe:
