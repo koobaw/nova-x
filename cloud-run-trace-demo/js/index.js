@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 
-// GET 请求路由
+// GET
 app.get('/', (req, res) => {
   const name = 'Infra Team';
   res.send(`Hello ${name}! (GET)`);
 });
 
-// POST 请求路由
+// POST
 app.post('/postRoute', (req, res) => {
   const name = 'Infra Team';
   res.send(`Hello ${name}! (POST)`);
