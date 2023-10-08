@@ -1,4 +1,4 @@
-# reference
+# Reference
 
 [trace with cloudrun docs](https://cloud.google.com/run/docs/tutorials/custom-metrics-opentelemetry-sidecar)
 
