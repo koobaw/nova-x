@@ -18,7 +18,7 @@ spec:
         - containerPort: 8080
         env:
         - name: "TEST_SERVICE"
-          value: "opentelemetry-cloud-run-test-kk"
+          value: "opentelemetry-cloud-run-test"
       - image: asia-northeast1-docker.pkg.dev/nova-we/init/otel-collector-metrics
         name: collector
         startupProbe:
