@@ -1,3 +1,9 @@
+# reference
+
+[trace with cloudrun docs](https://cloud.google.com/run/docs/tutorials/custom-metrics-opentelemetry-sidecar)
+
+[trace with cloudrun sample](https://github.com/GoogleCloudPlatform/opentelemetry-cloud-run/)
+
 # Cloud Run Hello World Sample
 
 This sample shows how to deploy a Hello World application to Cloud Run.
