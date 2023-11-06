@@ -30,5 +30,5 @@ func TestGCEWebserverCreate(t *testing.T) {
 
 	// Validate Terraform Output contains 2 values
 	outputMap := terraform.OutputAll(t, terraformOptions)
-	assert.Equal(t, 2, len(outputMap))
+	assert.Equal(t, 3, len(outputMap))
 }
