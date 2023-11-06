@@ -8,3 +8,6 @@ output "instance_id" {
     value = google_compute_instance.server.id
 }
 
+output "storage" {
+  value = google_project_service.enable_facilities["storage.googleapis.com"]
+}
