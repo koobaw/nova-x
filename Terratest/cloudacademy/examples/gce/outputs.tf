@@ -9,5 +9,5 @@ output "instance_id" {
 }
 
 output "storage" {
-  value = module.webserver.google_project_service.enable_facilities["storage.googleapis.com"]
+  value = module.webserver.storage
 }
