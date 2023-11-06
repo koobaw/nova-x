@@ -17,4 +17,6 @@ module "webserver" {
     name         = var.name
     machine_type = var.machine_type
     zone         = var.zone
+    project_id = "nova-vx"
+    region = "us-central1"
 }
