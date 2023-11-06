@@ -2,14 +2,13 @@ terraform {
   required_providers {
     google = {
       source = "hashicorp/google"
-      version = "3.5.0"
+      version = ">= 4.75.0"
     }
   }
 }
  
 provider "google" {
-  credentials = "/home/project/.sa_key"
-  project = "cal-2800-ec0a0d9a30eb"
+  project = "nova-vx"
   region = "us-central1"
 }
  
