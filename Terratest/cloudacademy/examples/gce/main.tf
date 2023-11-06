@@ -6,7 +6,7 @@ terraform {
     }
   }
 }
- 
+
 provider "google" {
   project = "nova-vx"
   region = "us-central1"
