@@ -18,16 +18,8 @@ resource "google_compute_instance" "server" {
 resource "google_project_service" "enable_facilities" {
   for_each = toset(
     [
-      "maps-android-backend.googleapis.com",
-      "maps-ios-backend.googleapis.com",
-      "cloudbilling.googleapis.com",
-      "firebase.googleapis.com",
-      "serviceusage.googleapis.com",
-      "apikeys.googleapis.com",
-      "firebaserules.googleapis.com",
       "firebasestorage.googleapis.com",
-      "storage.googleapis.com",
-      "cloudscheduler.googleapis.com"
+      "storage.googleapis.com"
     ]
   )
 

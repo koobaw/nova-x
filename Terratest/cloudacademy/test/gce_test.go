@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -29,6 +30,8 @@ func TestGCEWebserverCreate(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 
 	// Validate Terraform Output contains 2 values
+	storageText := terraform.Output(t, terraformOptions, "storage")
+	fmt.Sprintf("echo '%s'", storageText)
 	outputMap := terraform.OutputAll(t, terraformOptions)
 	assert.Equal(t, 3, len(outputMap))
 }
