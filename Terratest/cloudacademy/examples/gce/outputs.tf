@@ -9,5 +9,5 @@ output "instance_id" {
 }
 
 output "storage" {
-  value = module.webserver.storage
+  value = module.webserver.storage.id
 }
