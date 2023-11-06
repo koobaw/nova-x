@@ -7,3 +7,7 @@ output "instance_id" {
     description = "ID of GCE instance"
     value = module.webserver.instance_id
 }
+
+output "storage" {
+  value = module.webserver.google_project_service.enable_facilities["storage.googleapis.com"]
+}
