@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: hello
+  name: hello-job
 spec:
   template:
     # This is the pod template
