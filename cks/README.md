@@ -15,8 +15,17 @@ https://cloud.google.com/kubernetes-engine/docs/quickstarts/deploy-app-container
 
 
 ```
-kubectl apply -f deployments.yaml  
-kubectl get replicaset 
-kubectl get deploy 
-kubectl get pods 
+# POD基本命令
+kubectl apply -f deployments.yaml
+kubectl get replicaset
+kubectl get deploy
+kubectl get pods
+
+# 名称空间
+kubectl get ns
+kubectl describe ns default
+kubectl create namesapce qa
+kubectl describe ns qa
+kubectl delete ns qa
+kubectl get pods -n kube-system
 ```
