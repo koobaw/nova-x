@@ -1,6 +1,7 @@
 
-
 ```
+https://cloud.google.com/run/docs/quickstarts/jobs/build-create-go?hl=zh-cn
+
 gcloud run jobs deploy job-quickstart \
     --source . \
     --tasks 50 \
