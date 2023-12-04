@@ -2,56 +2,46 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
-	"cloud.google.com/go/firestore/apiv1/admin"
+	admin "cloud.google.com/go/firestore/apiv1/admin"
+	adminpb "google.golang.org/genproto/googleapis/firestore/admin/v1"
 )
 
 const (
-	projectID    = "nova-hj"
-	bucketName   = "nova-hj-job"
-	databaseName = "projects/nova-hj/databases/(default)"
+	projectID  = "nova-hj"
+	databaseID = "(default)"
+	bucketName = "nova-hj-job"
 )
 
-func backupFirestoreToGCS() error {
+func main() {
 	ctx := context.Background()
 
 	// 创建 Firestore Admin 客户端
 	client, err := admin.NewFirestoreAdminClient(ctx)
 	if err != nil {
-		return err
+		log.Fatalf("Failed to create Firestore Admin client: %v", err)
 	}
 	defer client.Close()
 
-	// 创建备份请求
-	request := &admin.ExportDocumentsRequest{
-		Name:            databaseName,
-		OutputUriPrefix: "gs://" + bucketName + "/firestore-backup",
+	// 构造备份请求
+	request := &adminpb.ExportDocumentsRequest{
+		Name:            fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
+		CollectionIds:   nil, // 备份整个数据库
+		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup", bucketName),
 	}
 
-	// 发起备份操作
-	operation, err := client.ExportDocuments(ctx, request)
+	// 执行备份
+	op, err := client.ExportDocuments(ctx, request)
 	if err != nil {
-		return err
+		log.Fatalf("Failed to export documents: %v", err)
 	}
 
-	// 等待备份操作完成
-	_, err = operation.Wait(ctx)
-	if err != nil {
-		return err
+	// 等待备份完成
+	if _, err := op.Wait(ctx); err != nil {
+		log.Fatalf("Failed to wait for export operation to complete: %v", err)
 	}
 
-	log.Println("Firestore backup completed successfully.")
-	return nil
-}
-
-func main() {
-	log.Print("Hello, Cloud Run Job!")
-
-	// 执行 Firestore 备份到 GCS 操作
-	if err := backupFirestoreToGCS(); err != nil {
-		log.Printf("Error backing up Firestore: %v", err)
-	}
-
-	log.Print("Your task has been successfully completed!!!")
+	log.Print("Firestore database backup completed successfully!")
 }
