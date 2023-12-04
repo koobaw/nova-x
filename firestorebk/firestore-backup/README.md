@@ -40,7 +40,7 @@ gcloud functions deploy firestore-backup \
   --allow-unauthenticated \
   --project $GOOGLE_PROJECT \
   --region $REGION \
-  --entry-point=function \
+  --entry-point=functionbk \
   --service-account $sa
 
 gcloud functions add-iam-policy-binding firestore-backup \
