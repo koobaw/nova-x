@@ -39,7 +39,7 @@ func createFirestoreAdminClient(ctx context.Context) (*admin.FirestoreAdminClien
 	if err != nil {
 		return nil, fmt.Errorf("Firestore Admin クライアントの作成に失敗しました: %v", err)
 	}
-	log.Print("Firestore Admin クライアントの作成済み.")
+	log.Print("Firestore Admin クライアントの作成済み。")
 	return client, nil
 }
 
