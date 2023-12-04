@@ -51,18 +51,21 @@ gcloud config set project $project_id
 gcloud auth application-default set-quota-project $project_id
 
 gcloud functions deploy firestore-backup \
---gen2 \
---region=$REGION \
---runtime=go121 \
---source=./ \
---entry-point=myCloudEventFunction \
---trigger-topic=YOUR_PUBSUB_TOPIC
-
+  --gen2 \
+  --entry-point=myCloudEventFunction \
+  --memory=256MB \
+  --region=asia-northeast1 \
+  --runtime=go121 \
+  --trigger-topic=functions-bk-test  \
+  --min-instances 1 \
+  --max-instances 3 \
+  --allow-unauthenticated \
+  --service-account $sa
 
 gcloud functions add-iam-policy-binding firestore-backup \
   --member=serviceAccount:$sa \
   --role=roles/functions.invoker
-  
+
 gcloud scheduler jobs create http firestore-backup \
   --schedule="0 0 * * *" \
   --uri=[function-url] \
