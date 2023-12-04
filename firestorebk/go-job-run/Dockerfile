@@ -1,8 +1,8 @@
 FROM golang:1.21-alpine AS builder
 WORKDIR /usr/local/src/
-ADD go.mod ./
+COPY go.mod ./
 RUN go mod download
-ADD . .
+COPY . .
 RUN go build -o /go/bin/app ./main.go
 
 FROM alpine:latest
