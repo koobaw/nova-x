@@ -39,6 +39,5 @@ func main() {
 	if _, err := op.Wait(ctx); err != nil {
 		log.Fatalf("Failed to wait for export operation to complete: %v", err)
 	}
-	log.Print("EEEEEEEEEEEEE")
 	log.Print("Firestore database backup completed successfully!")
 }
