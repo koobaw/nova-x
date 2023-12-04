@@ -24,6 +24,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Firestore Admin クライアントの作成に失敗しました: %v", err)
 	}
+
+	//　実行おわたっら、クラアントクローズする確保する
 	defer client.Close()
 
 	// バックアップの実行

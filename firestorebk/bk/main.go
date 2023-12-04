@@ -25,7 +25,10 @@ func main() {
 		log.Fatalf("Failed to create Firestore Admin client: %v", err)
 	}
 	log.Print("Firestore Adminクライアントの作成済み.")
+
+	//　実行おわたっら、クラアントクローズする確保する
 	defer client.Close()
+
 	// バックアップリクエストの構築
 	request := &adminpb.ExportDocumentsRequest{
 		Name:            fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
