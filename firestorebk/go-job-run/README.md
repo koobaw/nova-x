@@ -43,25 +43,24 @@ docker image push $IMAGE_URL
 # https://cloud.google.com/run/docs/create-jobs?hl=zh-cn#command-line
 
 gcloud run jobs create $JOB_NAME \
-    --image $IMAGE_URL \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
     --set-env-vars SLEEP_MS=10000 \
     --set-env-vars FAIL_RATE=0.1 \
     --max-retries 5 \
+    --task-timeout 4h \
+    --image $IMAGE_URL \
     --project $GOOGLE_PROJECT \
-    --task-timeout 4h
+    --region $REGION
+
 gcloud run jobs execute $JOB_NAME --region $REGION
 
 gcloud run jobs update $JOB_NAME
-    --image $IMAGE_URL \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
     --set-env-vars SLEEP_MS=10000 \
     --set-env-vars FAIL_RATE=0.1 \
     --max-retries 5 \
+    --task-timeout 6h \
+    --image $IMAGE_URL \
     --project $GOOGLE_PROJECT \
-    --task-timeout 4h
+    --region $REGION
 
 gcloud run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
