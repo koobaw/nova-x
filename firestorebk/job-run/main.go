@@ -57,7 +57,7 @@ func runFirestoreBackup(ctx context.Context, client *admin.FirestoreAdminClient)
 	if err != nil {
 		return fmt.Errorf("ドキュメントのエクスポートに失敗しました: %v", err)
 	}
-	1
+
 	// バックアップの完了を待機
 	if _, err := op.Wait(ctx); err != nil {
 		return fmt.Errorf("エクスポート操作の完了待機に失敗しました: %v", err)
