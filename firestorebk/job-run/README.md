@@ -65,6 +65,8 @@ gcloud run jobs update $JOB_NAME
 gcloud run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
+
+gcloud run jobs replace job.yaml
 ```
 
 ## コマンドと引数は指定できる

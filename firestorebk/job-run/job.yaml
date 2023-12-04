@@ -1,0 +1,38 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  annotations:
+    run.googleapis.com/creator: chowandre801@gmail.com
+    run.googleapis.com/lastModifier: chowandre801@gmail.com
+  labels:
+    cloud.googleapis.com/location: asia-northeast1
+    run.googleapis.com/lastUpdatedTime: '2023-12-04T06:50:21.142396Z'
+  name: golang-job
+  namespace: '21616275549'
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 455.0.0
+        run.googleapis.com/execution-environment: gen2
+      labels:
+        client.knative.dev/nonce: gag_vex_lax
+    spec:
+      taskCount: 1
+      template:
+        spec:
+          containers:
+          - env:
+            - name: SLEEP_MS
+              value: '10000'
+            - name: FAIL_RATE
+              value: '0.1'
+            image: asia-northeast1-docker.pkg.dev/nova-hj/infra/golang-job:latest
+            resources:
+              limits:
+                cpu: 1000m
+                memory: 512Mi
+          maxRetries: 5
+          serviceAccountName: 21616275549-compute@developer.gserviceaccount.com
+          timeoutSeconds: '14400'
