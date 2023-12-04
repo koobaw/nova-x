@@ -1,3 +1,3 @@
-module github.com/nekoshita/cloud-run-job-example
+module github.com/jz/go-cloud-run-job
 
-go 1.18
+go 1.21

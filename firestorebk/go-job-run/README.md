@@ -22,8 +22,12 @@ https://cloud.google.com/run/docs/create-jobs
 ```
 export GOOGLE_PROJECT=nova-hj
 export REGION=asia-northeast1
-export IMAGE_URL=asia-northeast1-docker.pkg.dev/nova-nv/infra/golang-job:latest
+export IMAGE_URL=asia-northeast1-docker.pkg.dev/nova-hj/infra/golang-job:latest
 export JOB_NAME=golang-job
+export project_id="nova-hj"
+gcloud config configurations activate $project_id
+gcloud config set project $project_id
+gcloud auth application-default set-quota-project $project_id
 ```
 
 ## イメージを用意
@@ -36,37 +40,47 @@ docker image push $IMAGE_URL
 
 ## コマンドフラグなし -> 動作する
 ```
-gcloud beta run jobs create $JOB_NAME \
+# https://cloud.google.com/run/docs/create-jobs?hl=zh-cn#command-line
+
+gcloud run jobs create $JOB_NAME \
     --image $IMAGE_URL \
     --project $GOOGLE_PROJECT \
     --region $REGION
-gcloud beta run jobs execute $JOB_NAME \
+    --set-env-vars SLEEP_MS=10000 \
+    --set-env-vars FAIL_RATE=0.1 \
+    --max-retries 5 \
+    --project $GOOGLE_PROJECT \
+    --task-timeout 4h
+gcloud run jobs execute $JOB_NAME --region $REGION
+
+gcloud run jobs update $JOB_NAME
+    --image $IMAGE_URL \
     --project $GOOGLE_PROJECT \
     --region $REGION
-gcloud beta run jobs delete $JOB_NAME \
+    --set-env-vars SLEEP_MS=10000 \
+    --set-env-vars FAIL_RATE=0.1 \
+    --max-retries 5 \
+    --project $GOOGLE_PROJECT \
+    --task-timeout 4h
+
+gcloud run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
 
 ## コマンドと引数は指定できる
 ```
-gcloud beta run jobs create $JOB_NAME \
+gcloud run jobs create $JOB_NAME \
     --image $IMAGE_URL \
     --command "/app" \
     --args a,b,c,100 \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs execute $JOB_NAME \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
 
 ## フラグっぽい引数は指定する -> エラー
 ```
-gcloud beta run jobs create $JOB_NAME \
+gcloud run jobs create $JOB_NAME \
     --image $IMAGE_URL \
     --command "/app" \
     --args --user,hoge \
@@ -77,56 +91,38 @@ gcloud beta run jobs create $JOB_NAME \
 ##  yamlで無理やり更新を試みる -> servicesと違ってjobsはreplaceコマンド使えない
 なので、今のところフラグっぽい引数を指定することは不可能っぽい
 ```
-gcloud beta run jobs describe $JOB_NAME --format export \
+gcloud run jobs describe $JOB_NAME --format export \
     --project $GOOGLE_PROJECT \
     --region $REGION
-gcloud beta run jobs replace sample_job.yaml \
+gcloud run jobs replace sample_job.yaml \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
 
 ## 環境変数を指定できる
 ```
-gcloud beta run jobs create $JOB_NAME \
+gcloud run jobs create $JOB_NAME \
     --image $IMAGE_URL \
     --set-env-vars FOO=foo,BAR=bar \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs execute $JOB_NAME \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
 
 ## tasksを指定する -> 並列に実行される
 ```
-gcloud beta run jobs create $JOB_NAME \
+gcloud run jobs create $JOB_NAME \
     --tasks 3 \
     --image $IMAGE_URL \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs execute $JOB_NAME \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
 
 ## tasksとparallelismを指定する -> 並列数を制御できる
 ```
-gcloud beta run jobs create $JOB_NAME \
+gcloud run jobs create $JOB_NAME \
     --tasks 3 \
     --parallelism 1 \
     --image $IMAGE_URL \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs execute $JOB_NAME \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-gcloud beta run jobs delete $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
@@ -134,28 +130,15 @@ gcloud beta run jobs delete $JOB_NAME \
 
 ## その他使ったコマンド
 ```
-gcloud beta run jobs execute $JOB_NAME \
+gcloud run jobs list \
     --project $GOOGLE_PROJECT \
     --region $REGION
 
-gcloud beta run jobs execute $JOB_NAME \
+gcloud run jobs executions list\
     --project $GOOGLE_PROJECT \
     --region $REGION
 
-gcloud beta run jobs list \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-
-gcloud beta run jobs executions list\
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-
-gcloud beta run jobs executions describe sample-job-m9xkv \
-    --project $GOOGLE_PROJECT \
-    --region $REGION
-
-
-gcloud beta run jobs delete $JOB_NAME \
+gcloud run jobs executions describe sample-job-m9xkv \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```

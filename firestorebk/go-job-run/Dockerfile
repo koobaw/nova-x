@@ -1,4 +1,4 @@
-FROM golang:1.18.1-alpine AS builder
+FROM golang:1.21-alpine AS builder
 WORKDIR /usr/local/src/
 ADD go.mod ./
 RUN go mod download
