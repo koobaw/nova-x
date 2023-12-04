@@ -67,6 +67,8 @@ gcloud run jobs delete $JOB_NAME \
     --region $REGION
 
 gcloud run jobs replace job.yaml
+
+gcloud run jobs describe $JOB_NAME --format export > job.yaml
 ```
 
 ## コマンドと引数は指定できる
