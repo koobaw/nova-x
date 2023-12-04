@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	admin "cloud.google.com/go/firestore/apiv1/admin"
 	adminpb "google.golang.org/genproto/googleapis/firestore/admin/v1"
@@ -29,7 +30,7 @@ func main() {
 	request := &adminpb.ExportDocumentsRequest{
 		Name:            fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
 		CollectionIds:   nil, // データベース全体のバックアップ
-		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup", bucketName),
+		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup/%s", bucketName, time.Now().Format("2006-01-02")),
 	}
 	// バックアップの実行
 	log.Print("Firestore database backup バックアップの実行する.")
