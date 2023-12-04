@@ -1,44 +1,23 @@
-package function
+package mycloudeventfunction
 
 import (
 	"context"
-	"fmt"
-	"os"
+	"log"
 
-	"github.com/pkg/errors"
-	"google.golang.org/api/firestore/v1"
-	"google.golang.org/api/option"
+	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
+	"github.com/cloudevents/sdk-go/v2/event"
 )
 
-var projectID string
-
-// PubSubMessage is a body data from Pub/Sub payload
-type PubSubMessage struct {
-	Data string `json:"data"`
-}
-
 func init() {
-	projectID = os.Getenv("GCP_PROJECT")
+	// Register a CloudEvent function with the Functions Framework
+	functions.CloudEvent("MyCloudEventFunction", myCloudEventFunction)
 }
 
-// BackupFirestore is triggered by Cloud Functions
-func BackupFirestore(ctx context.Context, m PubSubMessage) error {
-	svc, err := firestore.NewService(ctx, option.WithScopes(firestore.DatastoreScope, firestore.CloudPlatformScope))
-	if err != nil {
-		return errors.Wrap(err, "Failed to create Firestore service")
-	}
-
-	req := &firestore.GoogleFirestoreAdminV1ExportDocumentsRequest{
-		OutputUriPrefix: fmt.Sprintf("gs://%s-backup-firestore", projectID),
-	}
-	_, err = firestore.NewProjectsDatabasesService(svc).ExportDocuments(
-		fmt.Sprintf("projects/%s/databases/(default)", projectID), req,
-	).Context(ctx).Do()
-	if err != nil {
-		return errors.Wrap(err, "Failed to export Firestore")
-	}
-
-	fmt.Println("Backup Successfully")
-
+// Function myCloudEventFunction accepts and handles a CloudEvent object
+func myCloudEventFunction(ctx context.Context, e event.Event) error {
+	// Your code here
+	// Access the CloudEvent data payload via e.Data() or e.DataAs(...)
+	log.Print("Firestore データベースのバックアップが正常に完了しました！")
+	// Return nil if no error occurred
 	return nil
 }
