@@ -1,3 +1,5 @@
+https://cloud.google.com/functions/docs/writing/write-event-driven-functions?hl=zh-cn#cloudevent-example-go
+----
 https://qiita.com/iwata@github/items/2c1499d49d7d22d633c1
 
 https://github.com/iwata/go-cloud-functions-examples/tree/master/backup-firestore
