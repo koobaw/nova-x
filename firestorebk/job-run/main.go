@@ -27,7 +27,7 @@ func main() {
 	// バックアップリクエストの構築
 	request := &adminpb.ExportDocumentsRequest{
 		Name:            fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
-		CollectionIds:   nil, // 备份整个数据库
+		CollectionIds:   nil, // データベース全体のバックアップ
 		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup", bucketName),
 	}
 	// バックアップの実行
