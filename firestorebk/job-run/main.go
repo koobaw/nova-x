@@ -46,9 +46,10 @@ func createFirestoreAdminClient(ctx context.Context) (*admin.FirestoreAdminClien
 func runFirestoreBackup(ctx context.Context, client *admin.FirestoreAdminClient) error {
 	// バックアップリクエストの構築
 	request := &adminpb.ExportDocumentsRequest{
-		Name:            fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
-		CollectionIds:   nil, // データベース全体のバックアップ
-		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup/%s", bucketName, time.Now().Format("2006-01-02-15:04:05")),
+		Name:          fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
+		CollectionIds: nil, // データベース全体のバックアップ
+		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup/%s", bucketName,
+			time.Now().Format("2006-01-02-15:04:05")),
 	}
 
 	log.Print("Firestore データベースのバックアップを実行します。")
