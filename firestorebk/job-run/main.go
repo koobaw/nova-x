@@ -18,24 +18,24 @@ const (
 func main() {
 	ctx := context.Background()
 
-	// 创建 Firestore Admin 客户端
+	// Firestore Adminクライアントの作成
 	client, err := admin.NewFirestoreAdminClient(ctx)
 	if err != nil {
 		log.Fatalf("Failed to create Firestore Admin client: %v", err)
 	}
 	defer client.Close()
-	// 构造备份请求
+	// バックアップリクエストの構築
 	request := &adminpb.ExportDocumentsRequest{
 		Name:            fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
 		CollectionIds:   nil, // 备份整个数据库
 		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup", bucketName),
 	}
-	// 执行备份
+	// バックアップの実行
 	op, err := client.ExportDocuments(ctx, request)
 	if err != nil {
 		log.Fatalf("Failed to export documents: %v", err)
 	}
-	// 等待备份完成
+	// バックアップの完了を待機
 	if _, err := op.Wait(ctx); err != nil {
 		log.Fatalf("Failed to wait for export operation to complete: %v", err)
 	}
