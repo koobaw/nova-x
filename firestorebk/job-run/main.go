@@ -23,6 +23,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create Firestore Admin client: %v", err)
 	}
+	log.Print("Firestore Adminクライアントの作成済み.")
 	defer client.Close()
 	// バックアップリクエストの構築
 	request := &adminpb.ExportDocumentsRequest{
@@ -31,6 +32,7 @@ func main() {
 		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup", bucketName),
 	}
 	// バックアップの実行
+	log.Print("Firestore database backup バックアップの実行する.")
 	op, err := client.ExportDocuments(ctx, request)
 	if err != nil {
 		log.Fatalf("Failed to export documents: %v", err)
