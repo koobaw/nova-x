@@ -51,7 +51,7 @@ gcloud run jobs create $JOB_NAME \
     --project $GOOGLE_PROJECT \
     --region $REGION
 
-gcloud run jobs execute $JOB_NAME --region $REGION
+gcloud run jobs execute $JOB_NAME --region $REGION --project $GOOGLE_PROJECT
 
 gcloud run jobs update $JOB_NAME
     --set-env-vars SLEEP_MS=10000 \
