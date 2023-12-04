@@ -20,10 +20,10 @@ https://cloud.google.com/run/docs/create-jobs
 
 ## 環境変数を用意
 ```
-export GOOGLE_PROJECT=stock-data-dev
-export REGION=europe-west9
-export IMAGE_URL=asia.gcr.io/stock-data-dev/cloud-run-job-example:latest
-export JOB_NAME=sample-job
+export GOOGLE_PROJECT=nova-hj
+export REGION=asia-northeast1
+export IMAGE_URL=asia-northeast1-docker.pkg.dev/nova-nv/infra/golang-job:latest
+export JOB_NAME=golang-job
 ```
 
 ## イメージを用意
