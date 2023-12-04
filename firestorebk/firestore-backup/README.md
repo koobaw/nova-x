@@ -38,8 +38,11 @@ gcloud functions deploy firestore-backup \
   --runtime go121 \
   --trigger-http \
   --allow-unauthenticated \
+  --project $GOOGLE_PROJECT \
+  --region $REGION \
+  --entry-point=function \
   --service-account $sa
-  
+
 gcloud functions add-iam-policy-binding firestore-backup \
   --member=serviceAccount:$sa \
   --role=roles/functions.invoker
