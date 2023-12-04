@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	functions.HTTP("Function", function)
+	functions.HTTP("Function", functionbk)
 }
 
 type backupRequest struct {
@@ -27,7 +27,7 @@ type backupRequest struct {
 // or restores a firestore database from a backup. The function is triggered by a cloud scheduler
 // job. You can invoke the function manually to restore collections by calling the function with the following
 // body: {"action": "restore", "collections": ["collection1", "collection2"], "project": "my-project"}
-func function(w http.ResponseWriter, r *http.Request) {
+func functionbk(w http.ResponseWriter, r *http.Request) {
 	var req backupRequest
 
 	body, err := io.ReadAll(r.Body)
