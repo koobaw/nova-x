@@ -22,25 +22,38 @@ and a Cloud Storage bucket. The tool will create a folder in the bucket to store
 ### Deploying the backup function
 
 ```shell
+export GOOGLE_PROJECT=nova-hj
+export REGION=asia-northeast1
+export IMAGE_URL=asia-northeast1-docker.pkg.dev/nova-hj/infra/golang-job:latest
+export JOB_NAME=golang-job
+export project_id="nova-hj"
+export sa="golang-job@nova-hj.iam.gserviceaccount.com"
+export bucket=nova-hj-job
+export furl=""
+gcloud config configurations activate $project_id
+gcloud config set project $project_id
+gcloud auth application-default set-quota-project $project_id
+
 gcloud functions deploy firestore-backup \
-  --runtime go116 \
+  --runtime go121 \
   --trigger-http \
-  --service-account [service-account]
+  --allow-unauthenticated \
+  --service-account $sa
   
 gcloud functions add-iam-policy-binding firestore-backup \
-  --member=serviceAccount:[service-account] \
+  --member=serviceAccount:$sa \
   --role=roles/functions.invoker
   
 gcloud scheduler jobs create http firestore-backup \
   --schedule="0 0 * * *" \
   --uri=[function-url] \
-  --oidc-service-account-email=[service-account] \
+  --oidc-service-account-email=$sa \
   --oidc-token-audience=[function-url]
-  --body='{"project_id":"[project-id]","bucket_name":"[bucket-name]", "action":"backup"}'
+  --body='{"project_id":"$project_id","bucket_name":"$bucket", "action":"backup"}'
 ```
 
 ### Calling the function to restore the database
 
 ```shell
-curl -X POST -H "Content-Type: application/json" -d '{"project_id":"[project-id]","bucket_name":"[bucket-name]", "action":"restore"}' [function-url]
+curl -X POST -H "Content-Type: application/json" -d '{"project_id":"$project_id","bucket_name":"$bucket", "action":"restore"}' [function-url]
 ```
