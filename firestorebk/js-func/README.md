@@ -1,5 +1,7 @@
 # Firestore backup and restore tool
 
+https://cloud.google.com/functions/docs/tutorials/pubsub?hl=zh-cn#functions_helloworld_pubsub_tutorial-nodejs
+
 This is a tool to backup and restore a Firestore database. It is written in Go and will run as a function on GCP. The 
 tool can be run stand alone or with a scheduler function that backs up the database on a regular basis. The tool can 
 also restore a database from a backup file. The tool is designed to be run on a GCP project that has a Firestore database
@@ -40,7 +42,7 @@ gcloud functions deploy functions-js-bk \
   --memory=256MB \
   --region=asia-northeast1 \
   --runtime=go121 \
-  --trigger-topic=js-functions-test  \
+  --trigger-topic=js-functions-test \
   --min-instances 1 \
   --max-instances 3 \
   --allow-unauthenticated \
@@ -48,16 +50,7 @@ gcloud functions deploy functions-js-bk \
 
 gcloud functions delete functions-go-bk
 
-gcloud functions add-iam-policy-binding functions-go-bk \
-  --member=serviceAccount:$sa \
-  --role=roles/functions.invoker
-
-gcloud scheduler jobs create http functions-go-bk \
-  --schedule="0 0 * * *" \
-  --uri=[function-url] \
-  --oidc-service-account-email=$sa \
-  --oidc-token-audience=[function-url]
-  --body='{"project_id":"$project_id","bucket_name":"$bucket", "action":"backup"}'
+gcloud pubsub topics create js-functions-test
 ```
 
 ### Calling the function to restore the database

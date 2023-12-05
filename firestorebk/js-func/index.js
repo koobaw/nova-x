@@ -1,31 +1,18 @@
-const firestore = require('@google-cloud/firestore');
-const client = new firestore.v1.FirestoreAdminClient();
-// Replace BUCKET_NAME
-const bucket = 'gs://nova-hj-job'
+'use strict';
 
-exports.scheduledFirestoreExport = (event, context) => {
-  console.log("CCCCCCCCCCCCCC")
-  const databaseName = client.databasePath(
-    'nova-hj',   //GCP_PROJECT
-    '(default)'
-  );
-  console.log("AAAAAAAAAAAAAAA")
-  return client
-    .exportDocuments({
-      name: databaseName,
-      outputUriPrefix: bucket,
-      // Leave collectionIds empty to export all collections
-      // or define a list of collection IDs:
-      // collectionIds: ['users', 'posts']
-      collectionIds: []
-    })
-    .then(responses => {
-      const response = responses[0];
-      console.log("BBBBBBBBBBBBBB")
-      console.log(`Operation Name KKKKKKK: ${response['name']}`);
-      return response;
-    })
-    .catch(err => {
-      console.error(err);
-    });
-};
+// [START functions_cloudevent_pubsub]
+const functions = require('@google-cloud/functions-framework');
+
+// Register a CloudEvent callback with the Functions Framework that will
+// be executed when the Pub/Sub trigger topic receives a message.
+functions.cloudEvent('helloPubSub', cloudEvent => {
+  // The Pub/Sub message is passed as the CloudEvent's data payload.
+  const base64name = cloudEvent.data.message.data;
+
+  const name = base64name
+    ? Buffer.from(base64name, 'base64').toString()
+    : 'World';
+
+  console.log(`Hello, ${name}!`);
+});
+// [END functions_cloudevent_pubsub]
