@@ -1,23 +1,26 @@
-package mycloudeventfunction
+// Package p contains a Pub/Sub Cloud Function.
+package p
 
 import (
 	"context"
 	"log"
 
-	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
-	"github.com/cloudevents/sdk-go/v2/event"
+	"cloud.google.com/go/functions/metadata"
+	"cloud.google.com/go/pubsub"
 )
 
-func init() {
-	// Register a CloudEvent function with the Functions Framework
-	functions.CloudEvent("MyCloudEventFunction", myCloudEventFunction)
-}
+// HelloPubSub consumes a Pub/Sub message.
+func HelloPubSub(ctx context.Context, m *pubsub.Message) error {
+	// metadata
+	meta, _ := metadata.FromContext(ctx)
 
-// Function myCloudEventFunction accepts and handles a CloudEvent object
-func myCloudEventFunction(ctx context.Context, e event.Event) error {
-	// Your code here
-	// Access the CloudEvent data payload via e.Data() or e.DataAs(...)
-	log.Print("Firestore データベースのバックアップが正常に完了しました！")
-	// Return nil if no error occurred
+	log.Println("EventID", meta.EventID)
+	log.Println("Timestamp", meta.Timestamp)
+	log.Println("EventType", meta.EventType)
+
+	log.Println("Resource.Service", meta.Resource.Service)
+	log.Println("Resource.Name", meta.Resource.Name)
+	log.Println("Resource.Type", meta.Resource.Type)
+
 	return nil
 }
