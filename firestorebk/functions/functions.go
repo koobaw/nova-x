@@ -11,53 +11,64 @@ import (
 	adminpb "google.golang.org/genproto/googleapis/firestore/admin/v1"
 )
 
-// Config 包含配置信息
-type Config struct {
-	ProjectID   string
-	DatabaseID  string
-	BucketName  string
-	Credentials string
-}
+const (
+	projectID  = "nova-hj"
+	databaseID = "(default)"
+	bucketName = "nova-hj-job"
+)
 
 // HelloPubSub 消费 Pub/Sub 消息
 func HelloPubSub(ctx context.Context, m *pubsub.Message) error {
 	log.Println(string(m.Data))
 
-	// 配置信息
-	config := Config{
-		ProjectID:  "nova-hj", // 替换为你的项目 ID
-		DatabaseID: "(default)",
-		BucketName: "nova-hj-job",
+	// Firestore Admin クライアントの作成
+	client, err := createFirestoreAdminClient(ctx)
+	if err != nil {
+		log.Fatalf("Firestore Admin クライアントの作成に失敗しました: %v", err)
 	}
 
-	// 创建 Firestore Admin 客户端
-	client, err := admin.NewFirestoreAdminClient(ctx)
-	if err != nil {
-		log.Fatalf("Failed to create Firestore Admin client: %v", err)
-	}
+	//　実行おわたっら、クラアントクローズする確保する
 	defer client.Close()
 
-	// 构建备份请求
-	backupFolder := time.Now().Format("2006-01-02-15:04:05")
-	request := &adminpb.ExportDocumentsRequest{
-		Name:            fmt.Sprintf("projects/%s/databases/%s", config.ProjectID, config.DatabaseID),
-		CollectionIds:   nil,
-		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup/%s", config.BucketName, backupFolder),
+	// バックアップの実行
+	if err := runFirestoreBackup(ctx, client); err != nil {
+		log.Fatalf("Firestore データベースのバックアップに失敗しました: %v", err)
 	}
 
-	// 执行备份操作
-	log.Print("执行 Firestore 数据库备份...")
+	log.Print("Firestore データベースのバックアップが正常に完了しました！")
+
+	return nil
+}
+
+func createFirestoreAdminClient(ctx context.Context) (*admin.FirestoreAdminClient, error) {
+	client, err := admin.NewFirestoreAdminClient(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Firestore Admin クライアントの作成に失敗しました: %v", err)
+	}
+	log.Print("Firestore Admin クライアントの作成済み。")
+	return client, nil
+}
+
+func runFirestoreBackup(ctx context.Context, client *admin.FirestoreAdminClient) error {
+	// バックアップリクエストの構築
+	request := &adminpb.ExportDocumentsRequest{
+		Name:          fmt.Sprintf("projects/%s/databases/%s", projectID, databaseID),
+		CollectionIds: nil, // データベース全体のバックアップ
+		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup/%s",
+			bucketName, time.Now().Format("2006-01-02-15:04:05")),
+	}
+
+	log.Print("Firestore データベースのバックアップを実行します。")
+	// バックアップの実行
 	op, err := client.ExportDocuments(ctx, request)
 	if err != nil {
-		log.Fatalf("Failed to export documents: %v", err)
+		return fmt.Errorf("ドキュメントのエクスポートに失敗しました: %v", err)
 	}
 
-	// 等待备份操作完成
+	// バックアップの完了を待機
 	if _, err := op.Wait(ctx); err != nil {
-		log.Fatalf("Failed to wait for export operation to complete: %v", err)
+		return fmt.Errorf("エクスポート操作の完了待機に失敗しました: %v", err)
 	}
-
-	log.Print("Firestore 数据库备份完成!")
 
 	return nil
 }

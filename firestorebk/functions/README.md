@@ -11,7 +11,6 @@ https://github.com/ChristianAlexander/FirestoreRestore
 ----
 https://medium.com/swlh/rollbacks-and-infinite-loops-with-firestore-and-cloud-functions-in-golang-263aa76398da
 
-
 https://xebia.com/blog/how-to-read-firestore-events-with-cloud-functions-and-golang/
 
 # Firestore backup and restore tool
@@ -62,13 +61,13 @@ gcloud functions deploy functions-go-bk \
   --allow-unauthenticated \
   --service-account $sa
 
-gcloud functions delete firestore-backup
+gcloud functions delete functions-go-bk
 
-gcloud functions add-iam-policy-binding firestore-backup \
+gcloud functions add-iam-policy-binding functions-go-bk \
   --member=serviceAccount:$sa \
   --role=roles/functions.invoker
 
-gcloud scheduler jobs create http firestore-backup \
+gcloud scheduler jobs create http functions-go-bk \
   --schedule="0 0 * * *" \
   --uri=[function-url] \
   --oidc-service-account-email=$sa \
@@ -82,6 +81,4 @@ gcloud scheduler jobs create http firestore-backup \
 go mod init github.com/jz/functions-go-bk
 go mod tidy 
 go build -o /go/bin/app ./functions.go
-
-curl -X POST -H "Content-Type: application/json" -d '{"project_id":"$project_id","bucket_name":"$bucket", "action":"restore"}' [function-url]
 ```
