@@ -46,8 +46,3 @@ gcloud run jobs delete $JOB_NAME_JS \
     --project $GOOGLE_PROJECT \
     --region $REGION
 ```
-
-## Run the Job
-```
-gcloud run jobs run job-quickstart
-```
