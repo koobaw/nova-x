@@ -41,11 +41,12 @@ gcloud functions deploy functions-js-bk \
   --entry-point=scheduledFirestoreExport \
   --memory=256MB \
   --region=asia-northeast1 \
-  --runtime=go121 \
+  --runtime=nodejs20 \
   --trigger-topic=js-functions-test \
   --min-instances 1 \
   --max-instances 3 \
   --allow-unauthenticated \
+  --source=. \
   --service-account $sa
 
 gcloud functions delete functions-go-bk
