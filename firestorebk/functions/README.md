@@ -1,18 +1,3 @@
-https://cloud.google.com/functions/docs/writing/write-event-driven-functions?hl=zh-cn#cloudevent-example-go
-----
-https://qiita.com/iwata@github/items/2c1499d49d7d22d633c1
-
-https://github.com/iwata/go-cloud-functions-examples/tree/master/backup-firestore
-
-https://github.com/sinmetal/firestore_export_debug
-
-https://github.com/ChristianAlexander/FirestoreRestore
-
-----
-https://medium.com/swlh/rollbacks-and-infinite-loops-with-firestore-and-cloud-functions-in-golang-263aa76398da
-
-https://xebia.com/blog/how-to-read-firestore-events-with-cloud-functions-and-golang/
-
 # Firestore backup and restore tool
 
 This is a tool to backup and restore a Firestore database. It is written in Go and will run as a function on GCP. The 
@@ -82,3 +67,10 @@ go mod init github.com/jz/functions-go-bk
 go mod tidy 
 go build -o /go/bin/app ./functions.go
 ```
+
+### REF
+https://cloud.google.com/functions/docs/writing/write-event-driven-functions?hl=zh-cn#cloudevent-example-go
+----
+https://qiita.com/iwata@github/items/2c1499d49d7d22d633c1
+----
+https://github.com/iwata/go-cloud-functions-examples/tree/master/backup-firestore
