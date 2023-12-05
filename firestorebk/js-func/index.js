@@ -4,12 +4,12 @@ const client = new firestore.v1.FirestoreAdminClient();
 const bucket = 'gs://nova-hj-job'
 
 exports.scheduledFirestoreExport = (event, context) => {
-  console.log("CCCCCCCCCCCCCC")
+  console.log("FirestoreAdminClient 作成");
   const databaseName = client.databasePath(
     'nova-hj',   //GCP_PROJECT
     '(default)'
   );
-  console.log("AAAAAAAAAAAAAAA")
+  console.log("exportDocuments 実行。。。");
   return client
     .exportDocuments({
       name: databaseName,
@@ -21,8 +21,8 @@ exports.scheduledFirestoreExport = (event, context) => {
     })
     .then(responses => {
       const response = responses[0];
-      console.log("BBBBBBBBBBBBBB")
-      console.log(`Operation Name KKKKKKK: ${response['name']}`);
+      console.log("exportDocuments 完了");
+      console.log(`操作Name operations ID : ${response['name']}`);
       return response;
     })
     .catch(err => {
