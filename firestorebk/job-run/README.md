@@ -23,7 +23,7 @@ https://cloud.google.com/run/docs/create-jobs
 export GOOGLE_PROJECT=nova-hj
 export REGION=asia-northeast1
 export IMAGE_URL=asia-northeast1-docker.pkg.dev/nova-hj/infra/golang-job:latest
-export JOB_NAME=golang-job
+export JOB_NAME=run-go-bk
 export project_id="nova-hj"
 gcloud config configurations activate $project_id
 gcloud config set project $project_id

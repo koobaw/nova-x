@@ -50,7 +50,7 @@ gcloud config configurations activate $project_id
 gcloud config set project $project_id
 gcloud auth application-default set-quota-project $project_id
 
-gcloud functions deploy firestore-backup \
+gcloud functions deploy functions-go-bk \
   --gen2 \
   --entry-point=HelloPubSub \
   --memory=256MB \
@@ -79,5 +79,9 @@ gcloud scheduler jobs create http firestore-backup \
 ### Calling the function to restore the database
 
 ```shell
+go mod init github.com/jz/functions-go-bk
+go mod tidy 
+go build -o /go/bin/app ./functions.go
+
 curl -X POST -H "Content-Type: application/json" -d '{"project_id":"$project_id","bucket_name":"$bucket", "action":"restore"}' [function-url]
 ```

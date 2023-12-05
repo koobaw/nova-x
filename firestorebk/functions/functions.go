@@ -8,15 +8,15 @@ import (
 
 	admin "cloud.google.com/go/firestore/apiv1/admin"
 	"cloud.google.com/go/pubsub"
-	"google.golang.org/api/option"
 	adminpb "google.golang.org/genproto/googleapis/firestore/admin/v1"
 )
 
 // Config 包含配置信息
 type Config struct {
-	ProjectID  string
-	DatabaseID string
-	BucketName string
+	ProjectID   string
+	DatabaseID  string
+	BucketName  string
+	Credentials string
 }
 
 // HelloPubSub 消费 Pub/Sub 消息
@@ -31,7 +31,7 @@ func HelloPubSub(ctx context.Context, m *pubsub.Message) error {
 	}
 
 	// 创建 Firestore Admin 客户端
-	client, err := admin.NewFirestoreAdminClient(ctx, option.WithCredentials(credentials))
+	client, err := admin.NewFirestoreAdminClient(ctx)
 	if err != nil {
 		log.Fatalf("Failed to create Firestore Admin client: %v", err)
 	}
