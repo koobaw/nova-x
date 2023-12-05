@@ -52,7 +52,7 @@ gcloud auth application-default set-quota-project $project_id
 
 gcloud functions deploy firestore-backup \
   --gen2 \
-  --entry-point=myCloudEventFunction \
+  --entry-point=HelloPubSub \
   --memory=256MB \
   --region=asia-northeast1 \
   --runtime=go121 \
