@@ -1,4 +1,4 @@
-module github.com/jz/run-go-bk
+module github.com/jz/functions-go-bk
 
 go 1.21
 

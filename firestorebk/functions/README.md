@@ -62,6 +62,8 @@ gcloud functions deploy firestore-backup \
   --allow-unauthenticated \
   --service-account $sa
 
+gcloud functions delete firestore-backup
+
 gcloud functions add-iam-policy-binding firestore-backup \
   --member=serviceAccount:$sa \
   --role=roles/functions.invoker

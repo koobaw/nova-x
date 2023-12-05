@@ -1,55 +1,63 @@
-// Package p contains a Pub/Sub Cloud Function.
 package p
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
-	"cloud.google.com/go/functions/metadata"
+	admin "cloud.google.com/go/firestore/apiv1/admin"
 	"cloud.google.com/go/pubsub"
+	"google.golang.org/api/option"
+	adminpb "google.golang.org/genproto/googleapis/firestore/admin/v1"
 )
 
-type Message struct {
-	// ID identifies this message.
-	// This ID is assigned by the server and is populated for Messages obtained from a subscription.
-	// This field is read-only.
-	ID string
-
-	// Data is the actual data in the message.
-	Data []byte
-
-	// Attributes represents the key-value pairs the current message
-	// is labelled with.
-	Attributes map[string]string
-
-	// The time at which the message was published.
-	// This is populated by the server for Messages obtained from a subscription.
-	// This field is read-only.
-	PublishTime time.Time
-	// contains filtered or unexported fields
+// Config 包含配置信息
+type Config struct {
+	ProjectID  string
+	DatabaseID string
+	BucketName string
 }
 
-// HelloPubSub consumes a Pub/Sub message.
+// HelloPubSub 消费 Pub/Sub 消息
 func HelloPubSub(ctx context.Context, m *pubsub.Message) error {
-	// metadata
-	meta, _ := metadata.FromContext(ctx)
-
 	log.Println(string(m.Data))
-	if len(m.Attributes) > 0 {
-		for k, v := range m.Attributes {
-			log.Println("key", k)
-			log.Println("value", v)
-		}
+
+	// 配置信息
+	config := Config{
+		ProjectID:  "nova-hj", // 替换为你的项目 ID
+		DatabaseID: "(default)",
+		BucketName: "nova-hj-job",
 	}
 
-	log.Println("EventID", meta.EventID)
-	log.Println("Timestamp", meta.Timestamp)
-	log.Println("EventType", meta.EventType)
+	// 创建 Firestore Admin 客户端
+	client, err := admin.NewFirestoreAdminClient(ctx, option.WithCredentials(credentials))
+	if err != nil {
+		log.Fatalf("Failed to create Firestore Admin client: %v", err)
+	}
+	defer client.Close()
 
-	log.Println("Resource.Service", meta.Resource.Service)
-	log.Println("Resource.Name", meta.Resource.Name)
-	log.Println("Resource.Type", meta.Resource.Type)
+	// 构建备份请求
+	backupFolder := time.Now().Format("2006-01-02-15:04:05")
+	request := &adminpb.ExportDocumentsRequest{
+		Name:            fmt.Sprintf("projects/%s/databases/%s", config.ProjectID, config.DatabaseID),
+		CollectionIds:   nil,
+		OutputUriPrefix: fmt.Sprintf("gs://%s/firestore-backup/%s", config.BucketName, backupFolder),
+	}
+
+	// 执行备份操作
+	log.Print("执行 Firestore 数据库备份...")
+	op, err := client.ExportDocuments(ctx, request)
+	if err != nil {
+		log.Fatalf("Failed to export documents: %v", err)
+	}
+
+	// 等待备份操作完成
+	if _, err := op.Wait(ctx); err != nil {
+		log.Fatalf("Failed to wait for export operation to complete: %v", err)
+	}
+
+	log.Print("Firestore 数据库备份完成!")
 
 	return nil
 }
