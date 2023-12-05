@@ -49,7 +49,7 @@ gcloud functions deploy functions-js-bk \
   --source=. \
   --service-account $sa
 
-gcloud functions delete functions-go-bk
+gcloud functions delete functions-go-bk --region=asia-northeast1
 
 gcloud pubsub topics create js-functions-test
 
