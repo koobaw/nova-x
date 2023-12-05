@@ -24,7 +24,7 @@ async function main() {
     const response = responses[0];
 
     console.log("exportDocuments 完了");
-    console.log(`操作Name: ${response['name']}`);
+    console.log(`操作Name operations ID : ${response['name']}`);
   } catch (err) {
     console.error(err);
     process.exit(1); // Exit with an error code
