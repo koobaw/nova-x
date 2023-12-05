@@ -1,12 +1,12 @@
 const firestore = require('@google-cloud/firestore');
 const client = new firestore.v1.FirestoreAdminClient();
 // Replace BUCKET_NAME
-const bucket = 'gs://cainz-cainzapp-infra-dev-firestore-backup'
+const bucket = 'gs://nova-hj-job'
 
 exports.scheduledFirestoreExport = (event, context) => {
   console.log("CCCCCCCCCCCCCC")
   const databaseName = client.databasePath(
-    'cainz-cainzapp-infra-dev',   //GCP_PROJECT
+    'nova-hj',   //GCP_PROJECT
     '(default)'
   );
   console.log("AAAAAAAAAAAAAAA")
