@@ -23,14 +23,24 @@ function createDatabaseName(client) {
 // ドキュメントのエクスポート
 async function exportFirestoreDocuments(client, databaseName, bucket) {
   console.log("exportDocuments 実行。。。");
-  const responses = await client.exportDocuments({
-    name: databaseName,
-    outputUriPrefix: bucket,
-    collectionIds: []
-  });
-  const response = responses[0];
-  console.log("exportDocuments 完了");
-  console.log(`操作Name operations ID : ${response['name']}`);
+  try {
+    const responses = await client.exportDocuments({
+      name: databaseName,
+      outputUriPrefix: bucket,
+      collectionIds: []
+    });
+
+    if (!responses || !responses.length || !responses[0] || !responses[0].name) {
+      throw new Error("エクスポートの応答が無効です。");
+    }
+
+    const response = responses[0];
+    console.log("exportDocuments 完了");
+    console.log(`操作Name operations ID : ${response.name}`);
+  } catch (err) {
+    console.error("エクスポート中にエラーが発生しました:", err.message);
+    throw err; // エラーを再スロー
+  }
 }
 
 async function main() {
@@ -38,7 +48,7 @@ async function main() {
     console.log("FirestoreAdminClient 作成");
 
     // Firestoreクライアントの作成
-    const client = createFirestoreClient();
+    const client = createFirestolient();
     
     // バケットとデータベース名の作成
     const bucket = createBucketName();
@@ -47,7 +57,7 @@ async function main() {
     // ドキュメントのエクスポート
     await exportFirestoreDocuments(client, databaseName, bucket);
   } catch (err) {
-    console.error(err);
+    console.error("メイン関数でエラーが発生しました:", err.message);
     process.exit(1); // エラーコードでプロセスを終了
   }
 }
