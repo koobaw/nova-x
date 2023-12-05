@@ -52,6 +52,9 @@ gcloud functions deploy functions-js-bk \
 gcloud functions delete functions-go-bk
 
 gcloud pubsub topics create js-functions-test
+
+gcloud pubsub topics publish js-functions-test --message="zjcd-0002 ok"
+
 ```
 
 ### Calling the function to restore the database
