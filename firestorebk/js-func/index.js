@@ -2,6 +2,7 @@ const firestore = require('@google-cloud/firestore');
 
 // Firestoreクライアントの作成
 function createFirestoreClient() {
+  console.log("FirestoreAdminClient 作成");
   return new firestore.v1.FirestoreAdminClient();
 }
 
@@ -21,8 +22,6 @@ function createDatabaseName() {
 
 // ドキュメントのエクスポート
 async function exportFirestoreDocuments(client, databaseName, bucket) {
-  console.log("FirestoreAdminClient 作成");
-
   console.log("exportDocuments 実行。。。");
   try {
     const responses = await client.exportDocuments({
